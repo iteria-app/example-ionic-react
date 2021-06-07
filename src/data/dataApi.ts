@@ -2,6 +2,8 @@ import { Plugins } from '@capacitor/core';
 import { Schedule, Session } from '../models/Schedule';
 import { Speaker } from '../models/Speaker';
 import { Location } from '../models/Location';
+import appData from '../../public/assets/data/data.json'
+import locations from '../../public/assets/data/locations.json'
 
 const { Storage } = Plugins;
 
@@ -13,14 +15,9 @@ const HAS_SEEN_TUTORIAL = 'hasSeenTutorial';
 const USERNAME = 'username';
 
 export const getConfData = async () => {
-  const response = await Promise.all([
-    fetch(dataUrl),
-    fetch(locationsUrl)]);
-  const responseData = await response[0].json();
-  const schedule = responseData.schedule[0] as Schedule;
+  const schedule = appData.schedule[0] as Schedule;
   const sessions = parseSessions(schedule);
-  const speakers = responseData.speakers as Speaker[];
-  const locations = await response[1].json() as Location[];
+  const speakers = appData.speakers as Speaker[];
   const allTracks = sessions
     .reduce((all, session) => all.concat(session.tracks), [] as string[])
     .filter((trackName, index, array) => array.indexOf(trackName) === index)
